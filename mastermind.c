@@ -5,10 +5,13 @@
 #include <unistd.h>
 
 char* generation();
-bool into(char* suite, char c, int l);
+bool into(char* suite, char c, int l, int n);
+void resetArray(int* array, int l);
 
 
 int main(int ac, char** av){
+
+
     char* code = generation();
     int attempts = 10;
     for (int i = 0; i<ac-1;i++){
@@ -20,41 +23,61 @@ int main(int ac, char** av){
         }
     }
 
+
     int bienP = 0;
     int malP = 0;
-    char essai = '_';
+    char essai = 0;
     int i = 0;
+    int* repetitions = calloc(8,sizeof(int));
+
+
     printf("Will you find the secret code?\nPlease enter a valid guess\n");
     while (attempts>0){
         read(0,&essai,1);
+        if (essai == 0){
+            return 0;
+        }
         if (code[i] == essai){
             bienP++;
-        } else if (into(code,essai,4)){
+            repetitions[code[i]-'0']++;
+
+        } else if (into(code,essai,4,repetitions[code[i]-'0']+1)){
             malP++;
+            repetitions[code[i]-'0']++;
         }
         i++;
-        if (essai == '\n'){
-            if (bienP == 4){
-                printf("Congratz! You did it!\n");
-                return 0;
-            }
-            printf("Well placed pieces: %d\nMisplaced pieces: %d\n",bienP,malP);
-            bienP = 0;
-            malP = 0;
-            i = 0;
-            attempts--;
-        }
-        if (!into("012345678\n",essai,10)){
+     if ((essai == '\n' && i!=5)||!into("01234567\n",essai,10,1)){
             printf("Wrong input!\n");
             bienP = 0;
             malP = 0;
             i = 0;
+            essai = 0;
+            resetArray(repetitions,8);
             while (essai != '\n'){
                 read(0,&essai,1);
             }
         }
-    
+        
+
+        if (essai == '\n'){
+            attempts--;
+            if (bienP == 4){
+                printf("Congratz! You did it!\n");
+                free(repetitions);
+                return 0;
+            }
+            if (attempts == 0){
+                printf("You lost, the code was %s",code);
+                free(repetitions);
+                return 0;
+            }
+            printf("Well placed pieces: %d\nMisplaced pieces: %d\n",bienP,malP);
+            essai = 0;
+            bienP = 0;
+            malP = 0;
+            i = 0;
+            resetArray(repetitions,8);
+        }
     }
     return 0;
-
 }
