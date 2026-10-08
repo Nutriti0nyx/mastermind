@@ -1,4 +1,4 @@
-# PRINTF
+# MASTERMIND
 ***
 
 ## Task
