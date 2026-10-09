@@ -1,4 +1,4 @@
-re: all fclean
+re: fclean all
 
 all: exe
 

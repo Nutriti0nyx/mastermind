@@ -4,10 +4,23 @@
 #include <stdbool.h>
 #include <unistd.h>
 
+
+
 char* generation();
 bool into(char* suite, char c, int l, int n);
 void resetArray(int* array, int l);
 
+bool verify(char *code){
+    if (strlen(code)==4){
+        return false;
+    }
+    for (int i=0;code[i]!='\0';i++){
+        if (!into(code,code[i],i,1)||!into("012345678\n",code[i],10,1)){
+            return false;
+        }
+    }
+    return true;
+}
 
 int main(int ac, char** av){
 
@@ -16,7 +29,8 @@ int main(int ac, char** av){
     int attempts = 10;
     for (int i = 0; i<ac-1;i++){
         if (strcmp(av[i],"-c") == 0){
-            if (strlen(av[i+1])==4){
+            if (verify(av[i+1])){
+
                 code = av[i+1];
             }
         }
@@ -44,6 +58,9 @@ int main(int ac, char** av){
         }
         if (code[i] == essai){
             bienP++;
+            if (repetitions[essai-'0']==1){
+                malP--;
+            }
             repetitions[essai-'0']++;
 
         } else if (into(code,essai,4,repetitions[essai-'0']+1)){
@@ -56,6 +73,7 @@ int main(int ac, char** av){
             bienP = 0;
             malP = 0;
             i = 0;
+            
             resetArray(repetitions,8);
             while (essai != '\n'){
                 read(0,&essai,1);
