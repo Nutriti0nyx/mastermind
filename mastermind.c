@@ -56,15 +56,12 @@ int main(int ac, char** av){
             bienP = 0;
             malP = 0;
             i = 0;
-            essai = 0;
             resetArray(repetitions,8);
             while (essai != '\n'){
                 read(0,&essai,1);
             }
-        }
-        
-
-        if (essai == '\n'){
+            essai = 0;
+        } else if (essai == '\n'){
             attempts--;
             if (bienP == 4){
                 printf("Congratz! You did it!\n");
