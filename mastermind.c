@@ -11,11 +11,11 @@ bool into(char* suite, char c, int l, int n);
 void resetArray(int* array, int l);
 
 bool verify(char *code){
-    if (strlen(code)==4){
+    if (strlen(code) != 4){
         return false;
     }
-    for (int i=0;code[i]!='\0';i++){
-        if (!into(code,code[i],i,1)||!into("012345678\n",code[i],10,1)){
+    for (int i=0; code[i]!='\0'; i++){
+        if (into(code,code[i], i, 1) || !into("012345678\n", code[i], 10, 1)){
             return false;
         }
     }
@@ -23,11 +23,9 @@ bool verify(char *code){
 }
 
 int main(int ac, char** av){
-
-
     char* code = generation();
     int attempts = 10;
-    for (int i = 0; i<ac-1;i++){
+    for (int i = 0; i<ac-1; i++){
         if (strcmp(av[i],"-c") == 0){
             if (verify(av[i+1])){
 
@@ -42,33 +40,32 @@ int main(int ac, char** av){
         attempts = 10;
     }
 
-
     int bienP = 0;
     int malP = 0;
     char essai = 0;
     int i = 0;
-    int* repetitions = calloc(9,sizeof(int));
+    int* repetitions = calloc(9, sizeof(int));
     int round = attempts;
 
     printf("Will you find the secret code?\nPlease enter a valid guess\n---\nRound 0\n");
     while (true){
-        read(0,&essai,1);
+        read(0, &essai, 1);
         if (essai == 0){
             return 0;
         }
         if (code[i] == essai){
             bienP++;
-            if (repetitions[essai-'0']==1){
+            if (repetitions[essai-'0'] == 1){
                 malP--;
             }
             repetitions[essai-'0']++;
 
-        } else if (into(code,essai,4,repetitions[essai-'0']+1)){
+        } else if (into(code, essai, 4, repetitions[essai - '0'] + 1)){
             malP++;
-            repetitions[essai-'0']++;
+            repetitions[essai - '0']++;
         }
         i++;
-        if ((essai == '\n' && i!=5)||!into("012345678\n",essai,10,1)){
+        if ((essai == '\n' && i!=5)||!into("012345678\n", essai, 10, 1)){
             printf("Wrong input!\n");
             bienP = 0;
             malP = 0;
